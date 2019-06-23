@@ -1,0 +1,180 @@
+@model aeh.uber.Models.AboutMeViewModel
+@{
+    ViewData["Title"] = "CV - " + Model.Name;
+    Layout = "~/Views/Shared/_LayoutCv.cshtml";
+}
+
+<header class="resume-header pt-4 pt-md-0">
+			    <div class="media flex-column flex-md-row">
+				    <img class="mr-3 img-fluid picture mx-auto" src="~/@Model.PicturePath" alt="">
+				    <div class="media-body p-4 d-flex flex-column flex-md-row mx-auto mx-lg-0">
+					    <div class="primary-info">
+						    <h1 class="name mt-0 mb-1 text-white text-uppercase text-uppercase">André Ehlert</h1>
+						    <div class="title mb-3">
+                                @Model.Jobtitle
+                            </div>
+						    <ul class="list-unstyled">
+							    <li class="mb-2"><a href="mailto:@Model.Email"><i class="far fa-envelope fa-fw mr-2" data-fa-transform="grow-3"></i>@Model.Email</a></li>
+							    <li><a href="@Model.CellPhoneLink"><i class="fas fa-mobile-alt fa-fw mr-2" data-fa-transform="grow-6"></i>@Model.Cellphone</a></li>
+						    </ul>
+					    </div><!--//primary-info-->
+					    <div class="secondary-info ml-md-auto mt-2">
+						    <ul class="resume-social list-unstyled">
+				                <li class="mb-3"><a href="@Model.Web"><span class="fa-container text-center mr-2"><i class="fas fa-globe"></i></span>@Model.Web</a></li>
+				                <li class="mb-3"><a href="@Model.Messenger?message"><span class="fa-container text-center mr-2"><i class="fas fa-comment-dots"></i></span>@Model.Messenger</a></li>
+				                <li class="mb-3"><a href="@Model.LocationLink" target="_blank" ><span class="fa-container text-center mr-2"><i class="fas fa-map-marked"></i></span>@Model.LocationDescription</a></li>
+						    </ul>
+					    </div><!--//secondary-info-->
+					    
+				    </div><!--//media-body-->
+			    </div><!--//media-->
+		    </header>
+
+            <div class="resume-body p-5">
+			    <section class="resume-section summary-section mb-5">
+				    <h2 class="resume-section-title text-uppercase font-weight-bold pb-3 mb-3">@Model.AboutHeading</h2>
+				    <div class="resume-section-content">
+					    <p class="mb-0">
+							@Html.Raw(Model.AboutContent)
+						</p>
+				    </div>
+			    </section><!--//summary-section-->
+			    <div class="row">
+				    <div class="col-lg-9">
+					    <section class="resume-section experience-section mb-5">
+						    <h2 class="resume-section-title text-uppercase font-weight-bold pb-3 mb-3">Erfahrung</h2>
+						    <div class="resume-section-content">
+							    <div class="resume-timeline position-relative">
+                                    @foreach(var experience in @Model.Experiences)
+                                    {
+                                        <article class="resume-timeline-item position-relative pb-5">
+
+									    <div class="resume-timeline-item-header mb-2">
+										    <div class="d-flex flex-column flex-md-row">
+										        <h3 class="resume-position-title font-weight-bold mb-1">@experience.Heading</h3>
+										        <div class="resume-company-name ml-auto">@experience.Subheading</div>
+										    </div><!--//row-->
+										    <div class="resume-position-time">
+                                                @experience.From 
+                                                @experience.Until
+                                                </div>
+									    </div><!--//resume-timeline-item-header-->
+
+                                        <div class="resume-timeline-item-desc">
+										    <p>
+                                               @experience.Description 
+                                            </p>
+											<h4 class="resume-timeline-item-desc-heading font-weight-bold">
+                                                @experience.KeytopicHeading
+                                            </h4>
+										    <ul>
+                                                @foreach(var keytopic in experience.Keytopics)
+                                                {
+                                                    <li>
+                                                        @keytopic.Description
+                                                    </li>
+                                                }
+										    </ul>
+											<h4 class="resume-timeline-item-desc-heading font-weight-bold">
+                                                @experience.TagHeading
+                                            </h4>
+										    <ul class="list-inline">
+                                                 @foreach(var tag in experience.Tags)
+                                                {
+                                                    <li class="list-inline-item"><span class="badge badge-primary badge-pill">
+                                                        @tag.Description
+                                                    </span></li>
+                                                }
+										    </ul>
+									    </div><!--//resume-timeline-item-desc-->
+
+								    </article><!--//resume-timeline-item-->
+                                        
+                                    }
+							    </div><!--//resume-timeline-->
+						    </div>
+					    </section><!--//experience-section-->
+				    </div>
+				    <div class="col-lg-3">
+					    <section class="resume-section skills-section mb-5">
+						    <h2 class="resume-section-title text-uppercase font-weight-bold pb-3 mb-3">Fähigkeiten</h2>
+						    <div class="resume-section-content">
+                                @foreach(var skillGroup in @Model.SkillGroups.Where(x=> x.Description.StartsWith("<")))
+                                {
+                                    <div class="resume-skill-item">
+							        <h4 class="resume-skills-cat font-weight-bold">
+                                        @skillGroup.Description
+                                    </h4>
+                                        @if(skillGroup.SkillsContainingLevel)
+                                        {
+                                            <ul class="list-unstyled mb-4">
+
+                                            @foreach(var skill in skillGroup.Skills)
+                                            {
+                                                <li class="mb-2">
+                                                    <div class="resume-skill-name">
+                                                        @skill.Description
+                                                    </div>
+                                                    <div class="progress resume-progress">
+                                                        <div class="progress-bar theme-progress-bar-dark" role="progressbar" style="width: @skill.Level%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </li>
+                                            }
+                                            </ul>
+                                        }
+                                        else
+                                        {
+                                            <ul class="list-inline">
+
+                                            @foreach(var skill in skillGroup.Skills)
+                                            {
+                                                <li class="list-inline-item"><span class="badge badge-light">@skill.Description</span></li>                                        
+                                            }
+                                            </ul>
+                                        }
+
+						        </div><!--//resume-skill-item-->
+                                }
+
+					    </section><!--//interests-section-->
+
+                        
+                                @foreach(var skillGroup in @Model.SkillGroups.Where(x=> !x.Description.StartsWith("<")))
+                                {
+                                   // Sprachen & Interessen...
+                                   <section class="resume-section language-section mb-5">
+
+                                   <h2 class="resume-section-title text-uppercase font-weight-bold pb-3 mb-3">@skillGroup.Description</h2>
+                                   <div class="resume-section-content">
+
+                                   @if(skillGroup.Description.ToUpper() == "SPRACHEN")
+                                   {
+                                            <ul class="list-unstyled resume-lang-list">
+                                                @foreach(var skill in skillGroup.Skills)
+                                                {
+                                                    <li class="mb-2"><span class="resume-lang-name font-weight-bold">@skill.Description</span> <small class="text-muted font-weight-normal"></small></li>
+                                                }
+                                            </ul>
+                                   }
+                                   
+                                   @if(skillGroup.Description.ToUpper() == "INTERESSEN")
+                                   {
+                                            <ul class="list-unstyled">
+                                                @foreach(var skill in skillGroup.Skills)
+                                                {
+                                                    <li class="mb-1">@skill.Description</li>
+                                                }
+                                            </ul>
+                                   }
+                                   
+                                   </div>
+
+                                   </section><!--@skillGroup.Description-sections-->
+
+                                }
+						        
+					    
+				    </div>
+			    </div><!--//row-->
+		    </div><!--//resume-body-->
+		    
